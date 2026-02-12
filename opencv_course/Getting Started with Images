@@ -1,0 +1,15 @@
+import cv2 as cv
+
+img = cv.imread("m4.png")
+
+if img is None:
+    print("Image not found")
+    exit()
+
+cv.imshow("Image", img)
+cv.waitKey(0)
+cv.destroyAllWindows()
+
+print(img.shape)
+print(img.dtype)
+print(img[0, 0])   # top-left pixel
