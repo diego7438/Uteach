@@ -31,6 +31,7 @@ python hand_tracking.py
 - `rock_paper_scissors.py`: Play Rock-Paper-Scissors against the computer using hand gestures.
 - `fruit_ninja.py`: A hand-tracking game where you slice fruits and avoid letting them fall.
 - `AR Sunglasses.py`: Augmented reality demo overlaying sunglasses on your face (requires `assets/sunglasses.png`).
+- `face_overlay.py`: Overlays a custom image onto detected faces (requires `assets/actual_kevin.png`).
 
 ## Controls
 
