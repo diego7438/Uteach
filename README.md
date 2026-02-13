@@ -32,6 +32,7 @@ python hand_tracking.py
 - `fruit_ninja.py`: A hand-tracking game where you slice fruits and avoid letting them fall.
 - `AR Sunglasses.py`: Augmented reality demo overlaying sunglasses on your face (requires `assets/sunglasses.png`).
 - `face_overlay.py`: Overlays a custom image onto detected faces (requires `assets/actual_kevin.png`).
+- `motion_game.py`: A "Freeze" game where you must remain still while a laser scans the screen.
 
 ## Controls
 
