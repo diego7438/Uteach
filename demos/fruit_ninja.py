@@ -3,51 +3,8 @@ import cv2
 import mediapipe as mp
 import random
 import os
-import sys
+from utils import overlay_transparent
 
-# -----------------------------
-# Helper Function: Draw Transparent Image
-# -----------------------------
-def draw_transparent(target_img, overlay_img, x, y):
-    """
-    Overlays a PNG with transparency onto the target image at (x, y).
-    Handles edge cases where the image goes off-screen.
-    """
-    # x, y are center coordinates
-    if overlay_img is None:
-        return
-    
-    h, w = overlay_img.shape[:2]
-    h_target, w_target = target_img.shape[:2]
-
-    # Top-left coordinates
-    tl_x = int(x - w // 2)
-    tl_y = int(y - h // 2)
-
-    # Calculate intersection with target image
-    x1 = max(0, tl_x)
-    y1 = max(0, tl_y)
-    x2 = min(w_target, tl_x + w)
-    y2 = min(h_target, tl_y + h)
-
-    # If no intersection, return
-    if x1 >= x2 or y1 >= y2:
-        return
-    
-    # Calculate corresponding overlay coordinates
-    ov_x1 = x1 - tl_x
-    ov_y1 = y1 - tl_y
-    ov_x2 = ov_x1 + (x2 - x1)
-    ov_y2 = ov_y1 + (y2 - y1)
-
-    # Extract the region of interest (ROI)
-    overlay_crop = overlay_img[ov_y1:ov_y2, ov_x1:ov_x2]
-    target_crop = target_img[y1:y2, x1:x2]
-
-    # Alpha blending
-    alpha = overlay_crop[:, :, 3] / 255.0
-    for c in range(3):
-        target_crop[:, :, c] = (1.0 - alpha) * target_crop[:, :, c] + alpha * overlay_crop[:, :, c]
 
 def main():
     """
@@ -228,7 +185,7 @@ def main():
                 if not is_sliced and fruit['y'] < h + 50:
                     fruits_to_keep.append(fruit)
                     if watermelon_img is not None:
-                        draw_transparent(frame, watermelon_img, fruit['x'], fruit['y'])
+                        overlay_transparent(frame, watermelon_img, fruit['x'] - 40, fruit['y'] - 40)
                     else:
                         cv2.circle(frame, (int(fruit['x']), int(fruit['y'])), 40, (0, 0, 255), 10)
                 elif not is_sliced: # It wasn't sliced, so it must have fallen off screen
@@ -248,7 +205,7 @@ def main():
                 # If timer is still active, draw the splash
                 if splash['timer'] > 0:
                     if splash_img is not None:
-                        draw_transparent(frame, splash_img, splash['x'], splash['y'])
+                        overlay_transparent(frame, splash_img, splash['x'] - 50, splash['y'] - 50)
                     else:
                         # Fallback: Draw a yellow circle if splash image is missing
                         cv2.circle(frame, (int(splash['x']), int(splash['y'])), 45, (0, 255, 255), -1)

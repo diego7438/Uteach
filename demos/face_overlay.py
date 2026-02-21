@@ -1,6 +1,7 @@
 import cv2 # OpenCV for computer vision
 import numpy as np # for array manipulations
 import os
+from utils import overlay_transparent
 
 # ---------------------
 # Load the overlay image
@@ -30,30 +31,6 @@ cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
-
-# ---------------------
-# function to overlay png with transparency
-# ---------------------
-def overlay_png(background, overlay, x, y, w, h):
-    """
-    Draws a transparent overlay image on top of the background image.
-    
-    Parameters:
-    - background: the frame from webcam
-    - overlay: the PNG with alpha channel
-    - x, y: top-left coordinates to place overlay
-    - w, h: width and height to resize overlay
-    """
-    # Resize overlay to fit detected face
-    overlay = cv2.resize(overlay, (w, h))
-
-    # Loop over RGB channels
-    for i in range(3):
-        # alpha blending formula
-        background[y:y+h, x:x+w, i] = (
-            overlay[:, :, i] * (overlay[:, :, 3] / 255.0) +
-            background[y:y+h, x:x+w, i] * (1.0 - overlay[:, :, 3] / 255.0)
-        )
 
 # -----------------------------
 # Main loop
@@ -89,7 +66,7 @@ while True:
         new_x = max(0, new_x)
         new_y = max(0, new_y)
 
-        overlay_png(frame, overlay_image, new_x, new_y, new_w, new_h)
+        overlay_transparent(frame, overlay_image, new_x, new_y, overlay_size=(new_w, new_h))
 
     # Show the frame
     cv2.imshow("Face Overlay Demo", frame)

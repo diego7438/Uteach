@@ -1,6 +1,13 @@
-*
-!Uteach/
-!Uteach/**
-!.gitignore
-!README.md
-!LICENSE
+# Ignore personal course folders
+learning_opencv/
+opencv_course/
+
+# Python virtual environment
+venv/
+env/
+
+# Python cache and build artifacts
+__pycache__/
+.pytest_cache/
+build/
+dist/

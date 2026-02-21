@@ -1,4 +1,4 @@
-# Uteach Computer Vision Demos
+# Computer Vision Demos
 
 This repository contains a collection of beginner-friendly computer vision scripts using OpenCV and MediaPipe in Python. Demos include hand tracking, gesture detection, motion detection, face detection, a Rock-Paper-Scissors game, and a Fruit Ninja clone.
 
@@ -19,10 +19,12 @@ pip install -r requirements.txt
 Each script can be run individually. For example:
 
 ```sh
-python hand_tracking.py
+python demos/hand_tracking.py
 ```
 
 ### Script Descriptions
+
+All scripts are located in the `demos/` directory.
 
 - `hand_tracking.py`: Visualizes hand landmarks in real time using your webcam.
 - `gesture_detection.py`: Detects open hand and fist gestures.
@@ -30,8 +32,8 @@ python hand_tracking.py
 - `face_detection.py`: Captures and displays a single frame from your webcam.
 - `rock_paper_scissors.py`: Play Rock-Paper-Scissors against the computer using hand gestures.
 - `fruit_ninja.py`: A hand-tracking game where you slice fruits and avoid letting them fall.
-- `AR Sunglasses.py`: Augmented reality demo overlaying sunglasses on your face (requires `assets/sunglasses.png`).
-- `face_overlay.py`: Overlays a custom image onto detected faces (requires `assets/actual_kevin.png`).
+- `ar_sunglasses.py`: Augmented reality demo overlaying sunglasses on your face (requires `assets/sunglasses.png`).
+- `face_overlay.py`: Overlays a custom image onto detected faces (requires `assets/head_of_school.png`).
 - `motion_game.py`: A "Freeze" game where you must remain still while a laser scans the screen.
 
 ## Controls

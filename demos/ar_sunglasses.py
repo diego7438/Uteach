@@ -1,5 +1,6 @@
 import cv2
 import os
+from utils import overlay_transparent
 # -------------------------------
 # Load the sunglasses image
 # IMREAD_UNCHANGED keeps the alpha channel (transparency)
@@ -39,27 +40,6 @@ if not cap.isOpened():
     exit()
 
 # -------------------------------
-# Function to overlay a transparent PNG onto the webcam frame
-# background = webcam image
-# overlay = PNG image (with transparency)
-# x, y = top-left position
-# w, h = width and height
-# -------------------------------
-
-def overlay_png(background, overlay, x, y, w, h):
-
-    # resize the overlay image to match the detected face
-    overlay = cv2.resize(overlay, (w, h))
-
-    # loop over the RBG color channels
-    for i in range(3):
-        # blend the overlay with the background using the alpha channel
-        background[y:y+h, x:x+w, i] = (
-            overlay[:, :, i] * (overlay[:, :, 3] / 255.0) +
-            background[y:y+h, x:x+w, i] * (1.0 - overlay[:, :, 3] / 255.0)
-        )
-
-# -------------------------------
 # main loop: runs continuously until the user quits
 # -------------------------------
 
@@ -95,7 +75,7 @@ while True:
     for (x, y, w, h) in faces:
         # position sunglasses roughly over the eyes
         # y + h/4 moves them down from the top of the face
-        overlay_png(frame, sunglasses, x, y + h // 4, w, h // 3)
+        overlay_transparent(frame, sunglasses, x, y + h // 4, overlay_size=(w, h // 3))
     
     # -------------------------------
     # # Display the final result
