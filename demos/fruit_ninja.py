@@ -68,6 +68,22 @@ def main():
     game_over = False
 
     # -----------------------------
+    # Game Constants (for easy tweaking)
+    # -----------------------------
+    FINGER_RADIUS = 25
+    FRUIT_RADIUS = 40
+    SLICE_DISTANCE = FINGER_RADIUS + FRUIT_RADIUS - 20 # Allow some overlap
+    
+    FRUIT_SPAWN_CHANCE = 0.05 # 5% chance per frame
+    GRAVITY = 0.4
+    
+    # Fruit initial velocity ranges
+    MIN_VX, MAX_VX = -3, 3
+    MIN_VY, MAX_VY = -18, -12
+
+    SPLASH_DURATION = 15 # frames
+
+    # -----------------------------
     # Main Game Loop
     # -----------------------------
     try:
@@ -144,17 +160,17 @@ def main():
                 tip_y = int(index_tip.y * h)
                 
                 # Draw a green circle at the fingertip
-                cv2.circle(frame, (tip_x, tip_y), 25, (0, 255, 0), 8)
+                cv2.circle(frame, (tip_x, tip_y), FINGER_RADIUS, (0, 255, 0), 8)
 
             # -----------------------------
             # Fruit Spawning
             # -----------------------------
             # Randomly spawn a fruit at the bottom with a upward velocity
-            if random.random() < 0.05: # 5% chance per frame
+            if random.random() < FRUIT_SPAWN_CHANCE:
                 x = random.randint(50, frame.shape[1] - 50)
                 y = frame.shape[0] # Start at the bottom
-                vx = random.uniform(-3, 3) # horizontal speed
-                vy = random.uniform(-18, -12) # upward speed (negative = up)
+                vx = random.uniform(MIN_VX, MAX_VX) # horizontal speed
+                vy = random.uniform(MIN_VY, MAX_VY) # upward speed (negative = up)
                 fruits.append({'x': x, 'y': y, 'vx': vx, 'vy': vy})
 
             # -----------------------------
@@ -167,18 +183,18 @@ def main():
                 # Update position
                 fruit['x'] += fruit['vx']
                 fruit['y'] += fruit['vy'] # fruits y position is updated by adding a vy each frame
-                fruit['vy'] += 0.4 # gravity pulls down fruit
+                fruit['vy'] += GRAVITY # gravity pulls down fruit
 
                 is_sliced = False
                 
                 # Slicing detection
                 if tip_x != -1: # check if a hand was detected
                     dist = ((tip_x - fruit['x'])**2 + (tip_y - fruit['y'])**2)**0.5
-                    if dist < 65: # 25 (finger) + 40 (fruit)
+                    if dist < SLICE_DISTANCE:
                         score += 1
                         is_sliced = True
                         # Create a splash effect at the fruit's position
-                        splashes.append({'x': fruit['x'], 'y': fruit['y'], 'timer': 15}) # lasts 15 frames
+                        splashes.append({'x': fruit['x'], 'y': fruit['y'], 'timer': SPLASH_DURATION})
 
                 # If the fruit wasn't sliced and is still on screen, keep it for the next frame
                 if not is_sliced and fruit['y'] < h + 50:
