@@ -154,15 +154,12 @@ while True:
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q'):
         break
-    elif key == ord('r'):
+    elif (key == ord('r')) or (key == ord('s') and game_state == "TITLE"):
         game_state = "COUNTDOWN"
         state_start_time = time.monotonic()
     elif key == ord('a'):
         player_score = 0
         computer_score = 0
-    elif key == ord('s') and game_state == "TITLE":
-        game_state = "COUNTDOWN"
-        state_start_time = time.monotonic()
 
 # Release resources
 cap.release()
