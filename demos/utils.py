@@ -1,5 +1,45 @@
 import cv2
 import numpy as np
+import time
+
+
+class FPSTracker:
+    """Measure frames per second over a short rolling window."""
+
+    def __init__(self, update_interval=0.5):
+        self.update_interval = update_interval
+        self.frame_count = 0
+        self.fps = 0.0
+        self.last_update = time.perf_counter()
+
+    def update(self):
+        """Count one frame and refresh the FPS value periodically."""
+        self.frame_count += 1
+        now = time.perf_counter()
+        elapsed = now - self.last_update
+
+        if elapsed >= self.update_interval:
+            self.fps = self.frame_count / elapsed
+            self.frame_count = 0
+            self.last_update = now
+
+        return self.fps
+
+
+def draw_fps(frame, tracker, position=(20, 35)):
+    """Draw an FPS value on a frame and update the tracker."""
+    fps = tracker.update()
+    cv2.putText(
+        frame,
+        f"FPS: {fps:.1f}",
+        position,
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.8,
+        (0, 255, 255),
+        2,
+        cv2.LINE_AA,
+    )
+    return fps
 
 def overlay_transparent(background_img, overlay_img, x, y, overlay_size=None):
     """

@@ -1,6 +1,6 @@
 import cv2
 import os
-from utils import overlay_transparent
+from utils import FPSTracker, draw_fps, overlay_transparent
 # -------------------------------
 # Load the sunglasses image
 # IMREAD_UNCHANGED keeps the alpha channel (transparency)
@@ -34,6 +34,7 @@ if face_cascade.empty():
 # -------------------------------
 
 cap = cv2.VideoCapture(0)
+fps_tracker = FPSTracker()
 
 if not cap.isOpened():
     print("Can't open the camera")
@@ -80,6 +81,7 @@ while True:
     # -------------------------------
     # # Display the final result
     # -------------------------------
+    draw_fps(frame, fps_tracker)
     cv2.imshow("Face Detection with AR Sunglasses", frame)
     # press 'q' to quit the program
     if cv2.waitKey(1) & 0xFF == ord('q'):

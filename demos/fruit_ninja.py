@@ -3,7 +3,7 @@ import cv2
 import mediapipe as mp
 import random
 import os
-from utils import overlay_transparent
+from utils import FPSTracker, draw_fps, overlay_transparent
 
 WINDOW_NAME = "Fruit Ninja"
 
@@ -41,6 +41,7 @@ class FruitNinjaGame:
             min_tracking_confidence=0.5
         )
         self.cap = cv2.VideoCapture(0)
+        self.fps_tracker = FPSTracker()
 
     def load_assets(self):
         watermelon_path = os.path.join(self.script_dir, "..", "assets", "watermelon.png")
@@ -178,11 +179,13 @@ class FruitNinjaGame:
             if self.game_over:
                 cv2.putText(frame, "Game Over!", (w//2 - 200, h//2), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 0, 255), 8)
                 cv2.putText(frame, "R: Restart | Q: Quit", (w//2 - 250, h//2 + 140), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+                draw_fps(frame, self.fps_tracker)
                 cv2.imshow(WINDOW_NAME, frame)
                 continue
 
             if self.paused:
                 cv2.putText(frame, "Paused", (w//2 - 100, h//2), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 0), 4)
+                draw_fps(frame, self.fps_tracker)
                 cv2.imshow(WINDOW_NAME, frame)
                 continue
 
@@ -196,6 +199,7 @@ class FruitNinjaGame:
 
             self.process_splashes(frame)
             self.draw_ui(frame)
+            draw_fps(frame, self.fps_tracker)
             cv2.imshow(WINDOW_NAME, frame)
 
         self.cap.release()

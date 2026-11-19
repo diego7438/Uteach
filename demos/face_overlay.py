@@ -1,7 +1,7 @@
 import cv2 # OpenCV for computer vision
 import numpy as np # for array manipulations
 import os
-from utils import overlay_transparent
+from utils import FPSTracker, draw_fps, overlay_transparent
 
 # ---------------------
 # Load the overlay image
@@ -27,6 +27,7 @@ if face_cascade.empty():
 # Open webcam
 # ---------------------
 cap = cv2.VideoCapture(0)
+fps_tracker = FPSTracker()
 
 if not cap.isOpened():
     print("Cannot open camera")
@@ -69,6 +70,7 @@ while True:
         overlay_transparent(frame, overlay_image, new_x, new_y, overlay_size=(new_w, new_h))
 
     # Show the frame
+    draw_fps(frame, fps_tracker)
     cv2.imshow("Face Overlay Demo", frame)
 
     # Press 'q' to quit

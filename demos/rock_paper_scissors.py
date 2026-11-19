@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import random
 import time
+from utils import FPSTracker, draw_fps
 
 # -----------------------------
 # MediaPipe setup
@@ -14,6 +15,7 @@ mp_draw = mp.solutions.drawing_utils
 # Webcam
 # -----------------------------
 cap = cv2.VideoCapture(0)
+fps_tracker = FPSTracker()
 
 # -----------------------------
 # Game state
@@ -147,6 +149,7 @@ while True:
     cv2.putText(frame, f"CPU: {computer_score}", (w - 200, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
     cv2.putText(frame, "Q: Quit | R: Restart | A: Reset Score", (30, h - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
 
+    draw_fps(frame, fps_tracker)
     cv2.imshow("Rock Paper Scissors - CV Edition", frame)
 
     # -----------------------------
