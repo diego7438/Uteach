@@ -1,7 +1,9 @@
 import cv2
+from utils import FPSTracker, draw_fps
 
 # Open the default webcam
 cap = cv2.VideoCapture(0)
+fps_tracker = FPSTracker()
 
 # Read the first frame and preprocess it
 ret, prev_frame = cap.read()
@@ -38,6 +40,7 @@ while True:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
 
     # Show the frame with motion rectangles
+    draw_fps(frame, fps_tracker)
     cv2.imshow("Motion Detection", frame)
     
     # Update previous frame

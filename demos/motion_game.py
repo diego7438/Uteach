@@ -1,7 +1,9 @@
 import cv2
 import numpy as np
+from utils import FPSTracker, draw_fps
 
 cap = cv2.VideoCapture(0)
+fps_tracker = FPSTracker()
 
 # Let camera warm up
 for _ in range(10):
@@ -42,6 +44,7 @@ while True:
 
     combined = cv2.addWeighted(frame, 0.8, canvas, 0.2, 0)
 
+    draw_fps(combined, fps_tracker)
     cv2.imshow("Motion Paint", combined)
 
     prev_gray = gray

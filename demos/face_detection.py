@@ -1,4 +1,5 @@
 import cv2
+from utils import FPSTracker, draw_fps
 
 # Load the face cascade classifier for detecting faces
 face_cascade = cv2.CascadeClassifier(
@@ -12,6 +13,7 @@ if face_cascade.empty():
 
 # Open webcam (device 0)
 cap = cv2.VideoCapture(0)
+fps_tracker = FPSTracker()
 
 # Check if webcam opened successfully
 if not cap.isOpened():
@@ -41,6 +43,7 @@ while True:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
     # Display the frame with rectangles
+    draw_fps(frame, fps_tracker)
     cv2.imshow("Face Detection", frame)
 
     # Press 'q' to quit

@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+from utils import FPSTracker, draw_fps
 
 # Initialize MediaPipe Hands solution and drawing utilities
 mp_hands = mp.solutions.hands
@@ -8,6 +9,7 @@ mp_draw = mp.solutions.drawing_utils
 
 # Open the default webcam
 cap = cv2.VideoCapture(0)
+fps_tracker = FPSTracker()
 
 while True:
     # Read a frame from the webcam
@@ -29,6 +31,7 @@ while True:
             )
 
     # Show the frame with hand landmarks
+    draw_fps(frame, fps_tracker)
     cv2.imshow("Hand Tracking", frame)
 
     # Exit loop if 'q' is pressed

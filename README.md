@@ -85,9 +85,17 @@ Movement-driven drawing experience: detected motion paints rectangles on a persi
 python3 demos/motion_game.py
 ```
 
+### 🎯 Color Chase (`demos/color_chase.py`)
+
+A unique HSV color-tracking game: hold a blue, green, or red object in front of the camera and move it onto the yellow target. Press `C` to switch colors, and watch the detected-color mask to understand segmentation in real time.
+
+```zsh
+python3 demos/color_chase.py
+```
+
 ### 🧰 Shared Utilities (`demos/utils.py`)
 
-Helper module with `overlay_transparent(...)`, used by AR and overlay demos to blend transparent PNG assets onto video frames.
+Helper module with `overlay_transparent(...)` and `FPSTracker`, used for transparent image overlays and consistent real-time FPS measurement.
 
 ## 🖼️ Assets
 
@@ -109,6 +117,7 @@ All overlays, sunglasses, and fruit images are in the `assets/` folder. Swap the
 
 - **Q**: Quit any demo.
 - Some games have extra controls — check the code comments for details!
+- **FPS**: Every live demo displays a real-time frames-per-second tracker in the preview.
 
 ## 💡 Pro Tips
 
