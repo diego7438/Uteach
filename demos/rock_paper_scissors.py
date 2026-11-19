@@ -81,6 +81,7 @@ while True:
 
     # Convert frame to RGB for MediaPipe
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    rgb.flags.writeable = False
     results = hands.process(rgb)
 
     detected_gesture = "UNKNOWN"
