@@ -116,6 +116,21 @@ All overlays, sunglasses, and fruit images are in the `assets/` folder. Swap the
 - Tweak detection parameters for your lighting and camera setup.
 - All code is commented for easy learning and hacking.
 
+## ⚡ Performance Improvements to Explore
+
+These demos process live camera frames, so small per-frame improvements add up quickly. The first optimization is already applied in the MediaPipe demos:
+
+1. **Avoid writable MediaPipe inputs (implemented):** mark the temporary RGB frame as read-only before `hands.process(...)` so MediaPipe can avoid unnecessary image copies.
+2. **Process a smaller frame:** downscale camera frames before face or hand detection, then scale coordinates back for display.
+3. **Limit detected hands:** use `max_num_hands=1` when a demo only needs one hand.
+4. **Tune confidence thresholds:** raise detection confidence when false positives cost more than occasional missed detections.
+5. **Reuse resized overlays:** cache resized PNGs instead of resizing the same asset on every frame.
+6. **Use squared distances:** compare squared distances for collision checks and skip the expensive square root.
+7. **Skip unchanged work:** only redraw persistent canvases or recompute expensive results when the input has changed.
+8. **Reduce motion-detection noise:** blur and downscale before contour detection to process fewer pixels.
+9. **Configure camera resolution:** request the smallest width and height that still look good for the lesson.
+10. **Measure frame rate:** add an FPS counter before and after an optimization so improvements are measurable.
+
 ## 🏆 About the Author
 
 **Diego Anderson** — Computer Vision educator, hacker, and creator of Uteach. If you use this repo, tag @diego7438 and show off your results!

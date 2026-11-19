@@ -17,6 +17,7 @@ while True:
 
     # Convert the frame to RGB for MediaPipe processing
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    rgb.flags.writeable = False
     result = hands.process(rgb)
 
     # If hands are detected in the frame

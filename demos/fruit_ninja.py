@@ -68,6 +68,7 @@ class FruitNinjaGame:
 
     def track_hand(self, frame):
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        rgb.flags.writeable = False
         results = self.hands.process(rgb)
         tip_x, tip_y = -1, -1
         h, w, _ = frame.shape
