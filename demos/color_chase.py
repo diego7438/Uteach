@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """Chase a moving target with a colored object detected from your webcam."""
 
+# random places the next target at a different location after each hit.
 import random
+# OpenCV handles camera frames, masks, contours, drawing, and display.
 import cv2
+# NumPy stores HSV threshold arrays and performs mask operations.
 import numpy as np
 
+# Reuse the shared FPS display helpers.
 from utils import FPSTracker, draw_fps
 
 
@@ -24,6 +28,7 @@ WINDOW_NAME = "Color Chase"
 
 def random_target(frame_width, frame_height):
     """Choose a target position away from the screen edge."""
+    # Keep the target inside the frame so it is reachable and visible.
     margin = 90
     return (
         random.randint(margin, max(margin, frame_width - margin)),
@@ -33,6 +38,7 @@ def random_target(frame_width, frame_height):
 
 def largest_color_centroid(frame, lower, upper):
     """Return the center of the largest matching color region."""
+    # HSV separates color (hue) from brightness, making segmentation easier.
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     if lower[0] == 0:
@@ -42,14 +48,17 @@ def largest_color_centroid(frame, lower, upper):
     else:
         mask = cv2.inRange(hsv, lower, upper)
 
+    # Opening removes speckles; closing fills small holes in the detected blob.
     kernel = np.ones((7, 7), np.uint8)
     mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
+    # Use only outer contours because internal holes are not useful here.
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     if not contours:
         return None, mask
 
+    # The largest region is the best estimate of the player's held object.
     largest = max(contours, key=cv2.contourArea)
     area = cv2.contourArea(largest)
     if area < 800:
@@ -67,32 +76,40 @@ def largest_color_centroid(frame, lower, upper):
 
 
 def main():
+    """Run the color-selection game until the user quits."""
+    # OpenCV camera index 0 refers to the default webcam.
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Could not open camera.")
         return
 
+    # Cycle through the configured colors with the C key.
     fps_tracker = FPSTracker()
     color_names = list(COLORS)
     color_index = 0
     score = 0
     target = None
 
+    # Process frames until capture fails or Q is pressed.
     while True:
         ret, frame = cap.read()
         if not ret:
             print("Could not read from camera.")
             break
 
+        # Mirror the preview so object movement feels natural to the player.
         frame = cv2.flip(frame, 1)
         height, width = frame.shape[:2]
+        # Choose the first target only after the actual frame size is known.
         if target is None:
             target = random_target(width, height)
 
         color_name = color_names[color_index]
         lower, upper = COLORS[color_name]
+        # Segment the selected color and compute its largest blob centroid.
         detection, mask = largest_color_centroid(frame, lower, upper)
 
+        # A hit occurs when the detected center enters this circle.
         target_radius = 45
         cv2.circle(frame, target, target_radius, (0, 255, 255), 4)
 
@@ -109,6 +126,7 @@ def main():
                 2,
             )
 
+            # Compare squared distances to avoid an unnecessary square root.
             distance_squared = (object_x - target[0]) ** 2 + (object_y - target[1]) ** 2
             if distance_squared < target_radius**2:
                 score += 1
@@ -137,6 +155,7 @@ def main():
         cv2.imshow(WINDOW_NAME, frame)
         cv2.imshow("Detected Color Mask", mask)
 
+        # Read controls after displaying the current frame.
         key = cv2.waitKey(1) & 0xFF
         if key == ord("c"):
             color_index = (color_index + 1) % len(color_names)
@@ -148,4 +167,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # Keep importing this file from executing the camera loop automatically.
     main()

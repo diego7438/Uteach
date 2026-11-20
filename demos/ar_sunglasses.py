@@ -1,8 +1,13 @@
+"""Add a transparent sunglasses image to every detected face."""
+
+# OpenCV handles image loading, detection, capture, and display.
 import cv2
+# os makes the asset lookup independent of the process working directory.
 import os
+# Shared helpers provide FPS text and alpha-aware image compositing.
 from utils import FPSTracker, draw_fps, overlay_transparent
 # -------------------------------
-# Load the sunglasses image
+# Load the sunglasses image while preserving its alpha channel.
 # IMREAD_UNCHANGED keeps the alpha channel (transparency)
 # This is what lets the background to show through
 # -------------------------------
@@ -16,20 +21,20 @@ if sunglasses is None:
     exit()
 
 # -------------------------------
-# Load the pre-trained face detection model
+# Load OpenCV's pre-trained frontal-face detector.
 # This model was trained to recognize human faces
 # -------------------------------
 face_cascade = cv2.CascadeClassifier(
     cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 )
 
-# if the model fails to load, stop the program
+# Stop early if the detector file could not be loaded.
 if face_cascade.empty():
     print("Error loading face detection model")
     exit()
 
 # -------------------------------
-# Open the webcam
+# Device 0 is the default camera on the computer.
 # 0 = default camera on your computer
 # -------------------------------
 
@@ -41,27 +46,22 @@ if not cap.isOpened():
     exit()
 
 # -------------------------------
-# main loop: runs continuously until the user quits
+# Process frames until capture fails or the user presses Q.
 # -------------------------------
 
 while True:
     ret, frame = cap.read()
-    if not ret: # if the frame wasn't captured properly, stop
+    if not ret: # Stop if the frame was not captured properly.
         print("Can't receive frame")
         break
 
     # -------------------------------
-    # convert the image to grayscale
-    # face detection works faster and better in grayscale
+    # Face detection is faster and more reliable on grayscale input.
     # -------------------------------
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     # -------------------------------
-    # detect faces in the image
-    # scaleFactor: how much the image size is reduced at each scale
-    # minNeighbors: how many neighbors each candidate rectangle should have
-    # higher = fewer false positives but more true negatives
-    # minSize: smalest face size to detect
+    # Search multiple scales for faces and reject very small detections.
     # -------------------------------
     faces = face_cascade.detectMultiScale(
         gray, 
@@ -71,24 +71,23 @@ while True:
     )
 
     # -------------------------------
-    # for each detected face, add some sunglasses
+    # Position one resized sunglasses overlay over each detected face.
     # -------------------------------
     for (x, y, w, h) in faces:
-        # position sunglasses roughly over the eyes
-        # y + h/4 moves them down from the top of the face
+        # A quarter-face vertical offset places the glasses near the eyes.
         overlay_transparent(frame, sunglasses, x, y + h // 4, overlay_size=(w, h // 3))
     
     # -------------------------------
-    # # Display the final result
+    # Display the annotated frame with an FPS diagnostic.
     # -------------------------------
     draw_fps(frame, fps_tracker)
     cv2.imshow("Face Detection with AR Sunglasses", frame)
-    # press 'q' to quit the program
+    # Q quits the live preview.
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 # -------------------------------
-# release the camera and close all windows
+# Release the camera and close all OpenCV windows.
 # -------------------------------
 cap.release()
 cv2.destroyAllWindows()
