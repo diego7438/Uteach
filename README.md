@@ -11,7 +11,9 @@ Welcome to **Uteach** — a next-level collection of interactive Computer Vision
 
 ## 📦 Projects
 
-All Python files in `demos/` are listed below.
+All Python files in `demos/` are listed below. Each script now includes
+module-level documentation and inline comments that explain the camera input,
+computer-vision pipeline, game state, display output, and keyboard controls.
 
 ### 🍎 Fruit Ninja (`demos/fruit_ninja.py`)
 
@@ -97,6 +99,24 @@ python3 demos/color_chase.py
 
 Helper module with `overlay_transparent(...)` and `FPSTracker`, used for transparent image overlays and consistent real-time FPS measurement.
 
+## ⌨️ Demo controls
+
+| Demo | Controls |
+| --- | --- |
+| `face_detection.py` | `Q` quits |
+| `face_overlay.py` | `Q` quits |
+| `ar_sunglasses.py` | `Q` quits |
+| `hand_tracking.py` | `Q` quits |
+| `gesture_detection.py` | `Q` quits |
+| `motion_detection.py` | `Q` quits |
+| `motion_game.py` | `C` clears the motion canvas; `Q` quits |
+| `color_chase.py` | `C` changes the tracked color; `Q` quits |
+| `rock_paper_scissors.py` | `S` starts from the title screen; `R` starts/restarts a round; `A` resets scores; `Q` quits |
+| `fruit_ninja.py` | `P` pauses/resumes; `R` restarts; `Q` quits |
+
+Controls are read by the OpenCV preview window, so click that window before
+typing if a key press does not respond.
+
 ## 🖼️ Assets
 
 All overlays, sunglasses, and fruit images are in the `assets/` folder. Swap them out for your own style!
@@ -113,11 +133,29 @@ All overlays, sunglasses, and fruit images are in the `assets/` folder. Swap the
    pip install -r requirements.txt
    ```
 
+The demos need a working webcam. OpenCV provides the camera and display
+window, while MediaPipe is required by the hand-tracking and gesture-based
+demos. The AR and Fruit Ninja demos also expect their PNG files in `assets/`.
+
 ## 🎮 Controls
 
 - **Q**: Quit any demo.
 - Some games have extra controls — check the code comments for details!
 - **FPS**: Every live demo displays a real-time frames-per-second tracker in the preview.
+
+## 🧭 Troubleshooting
+
+- **Camera cannot open:** Close other apps that may be using the webcam, then
+  try another camera index in the script if your computer has multiple cameras.
+- **The preview is black or unreliable:** Improve lighting, keep the subject
+  inside the frame, and make sure the operating system has granted camera
+  permission to Python or the terminal.
+- **An overlay is missing:** Confirm the expected PNG exists under `assets/`
+  and that it includes transparency when the demo expects an alpha channel.
+- **MediaPipe import errors:** Reinstall the packages from `requirements.txt`
+  in the Python environment used to launch the demo.
+- **No keyboard response:** Focus the OpenCV window before pressing the
+  documented control key.
 
 ## 💡 Pro Tips
 
